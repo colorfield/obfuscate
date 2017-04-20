@@ -1,0 +1,24 @@
+<?php
+
+/**
+ * @file
+ * Contains obfuscate.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function obfuscate_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the obfuscate module.
+    case 'help.page.obfuscate':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Obfuscate email addresses as a Field Formatter of Email field.') . '</p>';
+      return $output;
+
+    default:
+  }
+}

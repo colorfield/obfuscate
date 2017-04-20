@@ -1,0 +1,7 @@
+name: Obfuscate
+type: module
+description: Obfuscate email addresses as a Field Formatter of the core Email field.
+core: 8.x
+package: Field types
+dependencies:
+  - node

@@ -1,0 +1,14 @@
+{
+  "name": "drupal/obfuscate",
+  "type": "drupal-module",
+  "description": "Obfuscate email addresses as a Field Formatter of Email field.",
+  "keywords": ["Drupal"],
+  "license": "GPL-2.0+",
+  "homepage": "https://www.drupal.org/project/obfuscate",
+  "minimum-stability": "dev",
+  "support": {
+    "issues": "https://www.drupal.org/project/issues/obfuscate",
+    "source": "http://cgit.drupalcode.org/obfuscate"
+  },
+  "require": { }
+}
