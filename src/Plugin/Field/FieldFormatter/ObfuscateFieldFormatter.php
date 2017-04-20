@@ -7,12 +7,11 @@ use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Url;
 
 /**
  * Plugin implementation of the 'obfuscate_field_formatter' formatter.
+ *
  * @todo rely on third party vendor, review e.g. https://github.com/Propaganistas/Email-Obfuscator
- * @todo coding standards
  *
  * @FieldFormatter(
  *   id = "obfuscate_field_formatter",
@@ -24,33 +23,37 @@ use Drupal\Core\Url;
  */
 class ObfuscateFieldFormatter extends FormatterBase {
 
-
   /**
    * Returns an obfuscated link from an email address.
    *
-   * @param $email
+   * @param string $email
+   *   Email address.
    * @param array $params
+   *   Optional parameters to be used by the a tag.
+   *
    * @return string
+   *   Obfuscated email link.
    */
-  private function getObfuscatedLink($email, $params = []) {
+  private function getObfuscatedLink($email, array $params = []) {
     if (!is_array($params)) {
-      $params = array();
+      $params = [];
     }
 
-    // Tell search engines to ignore obfuscated uri
+    // Tell search engines to ignore obfuscated uri.
     if (!isset($params['rel'])) {
       $params['rel'] = 'nofollow';
     }
 
-    $neverEncode = array(
+    $neverEncode = [
       '.',
       '@',
-      '+'
-    ); // Don't encode those as not fully supported by IE & Chrome
+      '+',
+      // Don't encode those as not fully supported by IE & Chrome.
+    ];
 
     $urlEncodedEmail = '';
     for ($i = 0; $i < strlen($email); $i++) {
-      // Encode 25% of characters
+      // Encode 25% of characters.
       if (!in_array($email[$i], $neverEncode) && mt_rand(1, 100) < 25) {
         $charCode = ord($email[$i]);
         $urlEncodedEmail .= '%';
@@ -76,18 +79,22 @@ class ObfuscateFieldFormatter extends FormatterBase {
 
   /**
    * Obfuscates an email address.
-   * @param $email
-   * @param array $params
+   *
+   * @param string $email
+   *   Email address.
+   *
    * @return string
+   *   Obfuscated email string.
    */
   private function obfuscateEmail($email) {
-    $alwaysEncode = array('.', ':', '@');
+    $alwaysEncode = ['.', ':', '@'];
 
     $result = '';
 
-    // Encode string using oct and hex character codes
+    // Encode string using oct and hex character codes.
     for ($i = 0; $i < strlen($email); $i++) {
-      // Encode 25% of characters including several that always should be encoded
+      // Encode 25% of characters including several
+      // that always should be encoded.
       if (in_array($email[$i], $alwaysEncode) || mt_rand(1, 100) < 25) {
         if (mt_rand(0, 1)) {
           $result .= '&#' . ord($email[$i]) . ';';
@@ -127,8 +134,7 @@ class ObfuscateFieldFormatter extends FormatterBase {
    */
   public function settingsSummary() {
     $summary = [];
-    // Implement settings summary.
-
+    // @todo implement settings summary.
     return $summary;
   }
 
@@ -139,11 +145,6 @@ class ObfuscateFieldFormatter extends FormatterBase {
     $elements = [];
 
     foreach ($items as $delta => $item) {
-      //$elements[$delta] = array(
-      //  '#type' => 'link',
-      //  '#title' => $item->value, // in clear, so could provide another implementation
-      //  '#url' => (Url::fromUri('mailto:' . $this->obfuscateEmail($item->value))),
-      //);
       $elements[$delta] = ['#markup' => $this->getObfuscatedLink($item->value)];
     }
 

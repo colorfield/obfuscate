@@ -4,4 +4,4 @@ description: Obfuscate email addresses as a Field Formatter of the core Email fi
 core: 8.x
 package: Field types
 dependencies:
-  - node
+  - field
