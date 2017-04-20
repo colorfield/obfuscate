@@ -7,9 +7,12 @@ use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 
 /**
  * Plugin implementation of the 'obfuscate_field_formatter' formatter.
+ * @todo rely on third party vendor, review e.g. https://github.com/Propaganistas/Email-Obfuscator
+ * @todo coding standards
  *
  * @FieldFormatter(
  *   id = "obfuscate_field_formatter",
@@ -21,13 +24,15 @@ use Drupal\Core\Form\FormStateInterface;
  */
 class ObfuscateFieldFormatter extends FormatterBase {
 
+
   /**
-   * Obfuscates an email link.
+   * Returns an obfuscated link from an email address.
+   *
    * @param $email
    * @param array $params
    * @return string
    */
-  private function obfuscateLink($email, $params = []) {
+  private function getObfuscatedLink($email, $params = []) {
     if (!is_array($params)) {
       $params = array();
     }
@@ -57,8 +62,8 @@ class ObfuscateFieldFormatter extends FormatterBase {
       }
     }
 
-    $obfuscatedEmail = $this->obfuscateLink($email);
-    $obfuscatedEmailUrl = $this->obfuscateLink('mailto:' . $urlEncodedEmail);
+    $obfuscatedEmail = $this->obfuscateEmail($email);
+    $obfuscatedEmailUrl = $this->obfuscateEmail('mailto:' . $urlEncodedEmail);
 
     $link = '<a href="' . $obfuscatedEmailUrl . '"';
     foreach ($params as $param => $value) {
@@ -70,12 +75,42 @@ class ObfuscateFieldFormatter extends FormatterBase {
   }
 
   /**
+   * Obfuscates an email address.
+   * @param $email
+   * @param array $params
+   * @return string
+   */
+  private function obfuscateEmail($email) {
+    $alwaysEncode = array('.', ':', '@');
+
+    $result = '';
+
+    // Encode string using oct and hex character codes
+    for ($i = 0; $i < strlen($email); $i++) {
+      // Encode 25% of characters including several that always should be encoded
+      if (in_array($email[$i], $alwaysEncode) || mt_rand(1, 100) < 25) {
+        if (mt_rand(0, 1)) {
+          $result .= '&#' . ord($email[$i]) . ';';
+        }
+        else {
+          $result .= '&#x' . dechex(ord($email[$i])) . ';';
+        }
+      }
+      else {
+        $result .= $email[$i];
+      }
+    }
+
+    return $result;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public static function defaultSettings() {
     return [
-      // Implement default settings.
-    ] + parent::defaultSettings();
+        // Implement default settings.
+      ] + parent::defaultSettings();
   }
 
   /**
@@ -83,8 +118,8 @@ class ObfuscateFieldFormatter extends FormatterBase {
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
     return [
-      // Implement settings form.
-    ] + parent::settingsForm($form, $form_state);
+        // Implement settings form.
+      ] + parent::settingsForm($form, $form_state);
   }
 
   /**
@@ -104,7 +139,12 @@ class ObfuscateFieldFormatter extends FormatterBase {
     $elements = [];
 
     foreach ($items as $delta => $item) {
-      $elements[$delta] = ['#markup' => $this->viewValue($item)];
+      //$elements[$delta] = array(
+      //  '#type' => 'link',
+      //  '#title' => $item->value, // in clear, so could provide another implementation
+      //  '#url' => (Url::fromUri('mailto:' . $this->obfuscateEmail($item->value))),
+      //);
+      $elements[$delta] = ['#markup' => $this->getObfuscatedLink($item->value)];
     }
 
     return $elements;
