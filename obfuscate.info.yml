@@ -1,7 +1,9 @@
 name: Obfuscate
 type: module
-description: Obfuscate email addresses as a Field Formatter of the core Email field.
+description: Obfuscates email addresses with a Field Formatter of Email field, a text Filter and a Twig extension.
 core: 8.x
-package: Field types
+package: Input filters
+configure: filter.admin_overview
 dependencies:
   - field
+  - filter

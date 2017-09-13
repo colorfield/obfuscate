@@ -1,0 +1,8 @@
+obfuscate.obfuscate_config_form:
+  title: 'Obfuscate configuration'
+  route_name: obfuscate.obfuscate_config_form
+  description: 'System wide email obfuscation method.'
+  # @todo review parent
+  parent: system.admin_config_system
+  weight: 99
+

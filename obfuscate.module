@@ -16,7 +16,7 @@ function obfuscate_help($route_name, RouteMatchInterface $route_match) {
     case 'help.page.obfuscate':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('Obfuscate email addresses as a Field Formatter of Email field.') . '</p>';
+      $output .= '<p>' . t('Obfuscates email addresses with a Field Formatter of Email field, a text Filter and a Twig extension.') . '</p>';
       return $output;
 
     default:
