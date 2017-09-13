@@ -20,7 +20,7 @@ class ObfuscateMail implements ObfuscateMailInterface {
    */
   public function __construct() {
     $config = \Drupal::config('obfuscate.settings');
-    $method = $config->get('method');
+    $method = $config->get('obfuscate.method');
     $this->obfuscateMailMethod = ObfuscateMailFactory::get($method);
   }
 

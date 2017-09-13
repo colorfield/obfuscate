@@ -22,3 +22,17 @@ function obfuscate_help($route_name, RouteMatchInterface $route_match) {
     default:
   }
 }
+
+/**
+ * Implements hook_theme().
+ */
+function obfuscate_theme() {
+  return [
+    'email_link' => [
+      'variables' => [
+        'link' => NULL,
+      ],
+      'render element' => 'children',
+    ],
+  ];
+}

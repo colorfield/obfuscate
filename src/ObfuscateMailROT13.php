@@ -18,17 +18,20 @@ class ObfuscateMailROT13 implements ObfuscateMailInterface {
    * {@inheritdoc}
    */
   public function getObfuscatedLink($email, array $params = []) {
-    // @todo implement
-    $result = '';
-    return $result;
+    $build = [
+      '#theme' => 'email_link',
+      '#link' => $this->obfuscateEmail($email),
+    ];
+    return $build;
   }
 
   /**
    * {@inheritdoc}
    */
   public function obfuscateEmail($email) {
-    // @todo implement
-    $result = '';
+    // @fixme Propaganistas global function, should be wrapped into a class
+    // ambiguous structure: global function called into a method.
+    $result = obfuscateEmail($email);
     return $result;
   }
 

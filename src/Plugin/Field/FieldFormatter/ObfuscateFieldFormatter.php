@@ -29,7 +29,7 @@ class ObfuscateFieldFormatter extends FormatterBase {
     // Gets the default Field Formatter settings
     // from the system wide configuration.
     $config = \Drupal::config('obfuscate.settings');
-    $method = $config->get('method');
+    $method = $config->get('obfuscate.method');
     return [
       'obfuscate_method' => $method,
     ] + parent::defaultSettings();
@@ -43,7 +43,7 @@ class ObfuscateFieldFormatter extends FormatterBase {
     // @todo use trait for shared settings form between per field override and formatter
 
     $config = \Drupal::config('obfuscate.settings');
-    $method = $config->get('method');
+    $method = $config->get('obfuscate.method');
 
     $form['obfuscate_method'] = [
       '#title' => t('Obfuscation method'),

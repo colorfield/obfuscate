@@ -43,7 +43,7 @@ class ObfuscateConfigForm extends ConfigFormBase {
       '#title' => $this->t('Obfuscation method'),
       '#description' => $this->t('System wide obfuscation method for fields et text filter, can be overriden per field configuration.'),
       '#options' => [ObfuscateMailFactory::HTML_ENTITY => $this->t('HTML entity'), ObfuscateMailFactory::ROT_13 => $this->t('ROT 13')],
-      '#default_value' => $config->get('method'),
+      '#default_value' => $config->get('obfuscate.method'),
     ];
     return parent::buildForm($form, $form_state);
   }
@@ -62,7 +62,7 @@ class ObfuscateConfigForm extends ConfigFormBase {
     parent::submitForm($form, $form_state);
 
     $this->config('obfuscate.settings')
-      ->set('method', $form_state->getValue('method'))
+      ->set('obfuscate.method', $form_state->getValue('method'))
       ->save();
   }
 
