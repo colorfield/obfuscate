@@ -41,7 +41,7 @@ class ObfuscateConfigForm extends ConfigFormBase {
     $form['method'] = [
       '#type' => 'radios',
       '#title' => $this->t('Obfuscation method'),
-      '#description' => $this->t('System wide obfuscation method for fields et text filter, can be overriden per field configuration.'),
+      '#description' => $this->t('System wide obfuscation method for Twig extension and text filter. Applies also to email field formatter and can be overriden per field configuration.'),
       '#options' => [ObfuscateMailFactory::HTML_ENTITY => $this->t('HTML entity'), ObfuscateMailFactory::ROT_13 => $this->t('ROT 13')],
       '#default_value' => $config->get('obfuscate.method'),
     ];
