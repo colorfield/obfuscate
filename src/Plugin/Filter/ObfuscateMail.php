@@ -22,7 +22,7 @@ class ObfuscateMail extends FilterBase {
    * {@inheritdoc}
    */
   public function tips($long = FALSE) {
-    drupal_set_message(t('Obfuscate mail filter not implemented yet.', 'warning'));
+    \Drupal::messenger()->addWarning(t('Obfuscate mail filter not implemented yet.'));
     return $this->t('Each email address will be obfuscated with the sytem wide configuration.');
   }
 

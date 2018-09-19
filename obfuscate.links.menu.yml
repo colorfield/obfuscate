@@ -5,4 +5,3 @@ obfuscate.obfuscate_config_form:
   # @todo review parent
   parent: system.admin_config_system
   weight: 99
-
