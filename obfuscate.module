@@ -34,5 +34,11 @@ function obfuscate_theme() {
       ],
       'render element' => 'children',
     ],
+    'email_rot13_link' => [
+      'variables' => [
+        'link' => NULL,
+      ],
+      'render element' => 'children',
+    ],
   ];
 }

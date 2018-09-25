@@ -19,7 +19,10 @@ class TwigExtension extends \Twig_Extension {
    */
   public function getFilters() {
     $filters = [
-      new \Twig_SimpleFilter('obfuscateMail', [$this, 'obfuscateMail']),
+      new \Twig_SimpleFilter(
+        'obfuscateMail',
+        [$this, 'obfuscateMail']
+      ),
     ];
     return $filters;
   }

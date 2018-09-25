@@ -9,8 +9,5 @@
   "support": {
     "issues": "https://www.drupal.org/project/issues/obfuscate",
     "source": "http://cgit.drupalcode.org/obfuscate"
-  },
-  "require": {
-    "propaganistas/email-obfuscator": "~1.0"
   }
 }

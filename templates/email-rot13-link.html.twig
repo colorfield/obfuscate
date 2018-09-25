@@ -1,0 +1,14 @@
+{#
+/**
+* @file
+* Theme implementation of the ROT 13 obfuscated email link.
+*
+* @ingroup themeable
+*/
+#}
+
+{{ attach_library('obfuscate/rot13') }}
+
+<span class="obfuscate-r13">
+  {{ link|raw }}
+</span>

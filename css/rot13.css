@@ -1,0 +1,8 @@
+.obfuscate-r13 .js-disabled {
+  unicode-bidi: bidi-override;
+  direction: rtl;
+}
+
+.obfuscate-r13 .js-enabled {
+  display: none;
+}

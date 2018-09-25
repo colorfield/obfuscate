@@ -1,4 +1,7 @@
-default:
+rot13:
   version: VERSION
+  css:
+    component:
+      css/rot13.css: { }
   js:
-    js/EmailObfuscator.min.js: { minified: true }
+    js/rot13.js: { }
