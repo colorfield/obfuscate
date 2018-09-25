@@ -56,12 +56,16 @@ class ObfuscateFieldFormatter extends FormatterBase {
    * {@inheritdoc}
    */
   public function settingsSummary() {
-    $summary = parent::settingsSummary();
-    if ($this->getSetting(ObfuscateMailFactory::HTML_ENTITY)) {
-      $summary[] = $this->t('Obfuscates email addresses with PHP only.');
-    }
-    elseif ($this->getSetting(ObfuscateMailFactory::ROT_13)) {
-      $summary[] = $this->t('Obfuscates email addresses with on ROT 13.');
+    $summary = [];
+    $method = $this->getSetting('obfuscate_method');
+    switch ($method) {
+      case ObfuscateMailFactory::HTML_ENTITY:
+        $summary[] = $this->t('Obfuscates email address with HTML entities (PHP only).');
+        break;
+
+      case ObfuscateMailFactory::ROT_13:
+        $summary[] = $this->t('Obfuscates email address with ROT 13.');
+        break;
     }
     return $summary;
   }
