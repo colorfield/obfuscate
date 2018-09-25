@@ -39,12 +39,6 @@ class ObfuscateFieldFormatter extends FormatterBase {
    * {@inheritdoc}
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
-
-    // @todo use trait for shared settings form between per field override and formatter
-
-    $config = \Drupal::config('obfuscate.settings');
-    $method = $config->get('obfuscate.method');
-
     $form['obfuscate_method'] = [
       '#title' => t('Obfuscation method'),
       '#type' => 'radios',
@@ -53,9 +47,8 @@ class ObfuscateFieldFormatter extends FormatterBase {
         ObfuscateMailFactory::ROT_13 => $this->t('ROT 13'),
       ],
       // Field override, gets default from system wide configuration.
-      '#default_value' => $this->getSetting($method),
+      '#default_value' => $this->getSetting('obfuscate_method'),
     ];
-
     return $form + parent::settingsForm($form, $form_state);
   }
 
@@ -65,10 +58,10 @@ class ObfuscateFieldFormatter extends FormatterBase {
   public function settingsSummary() {
     $summary = parent::settingsSummary();
     if ($this->getSetting(ObfuscateMailFactory::HTML_ENTITY)) {
-      $summary[] = $this->t('Obfuscates email addresses by relying on PHP only.');
+      $summary[] = $this->t('Obfuscates email addresses with PHP only.');
     }
     elseif ($this->getSetting(ObfuscateMailFactory::ROT_13)) {
-      $summary[] = $this->t('Obfuscates email addresses by relying on ROT 13.');
+      $summary[] = $this->t('Obfuscates email addresses with on ROT 13.');
     }
     return $summary;
   }
@@ -78,8 +71,7 @@ class ObfuscateFieldFormatter extends FormatterBase {
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
     $elements = [];
-    $settings = $this->getSettings();
-    $obfuscateMail = ObfuscateMailFactory::get($settings['obfuscate_method']);
+    $obfuscateMail = ObfuscateMailFactory::get($this->getSetting('obfuscate_method'));
     foreach ($items as $delta => $item) {
       $elements[$delta] = $obfuscateMail->getObfuscatedLink($item->value);
     }
