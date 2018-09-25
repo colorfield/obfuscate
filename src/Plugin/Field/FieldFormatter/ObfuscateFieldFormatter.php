@@ -44,7 +44,7 @@ class ObfuscateFieldFormatter extends FormatterBase {
       '#type' => 'radios',
       '#options' => [
         ObfuscateMailFactory::HTML_ENTITY => $this->t('HTML entity'),
-        ObfuscateMailFactory::ROT_13 => $this->t('ROT 13'),
+        ObfuscateMailFactory::ROT_13 => $this->t('ROT 13 / reversed text'),
       ],
       // Field override, gets default from system wide configuration.
       '#default_value' => $this->getSetting('obfuscate_method'),
@@ -64,7 +64,7 @@ class ObfuscateFieldFormatter extends FormatterBase {
         break;
 
       case ObfuscateMailFactory::ROT_13:
-        $summary[] = $this->t('Obfuscates email address with ROT 13.');
+        $summary[] = $this->t('Obfuscates email address with ROT 13 and reversed text (PHP/Javascript ROT 13, with reversed text CSS fallback).');
         break;
     }
     return $summary;

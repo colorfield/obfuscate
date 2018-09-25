@@ -11,17 +11,31 @@ Use Composer.
 
 ## Configuration
 
-Configuration for the text Filter, service container and Twig extension
-is system wide.
-The obfuscation method can be defined via /admin/config/obfuscate.
+### System wide
 
-The field configuration inherits the system wide configuration as a 
-default value.
-So field configuration can be overridden.
+The system wide configuration is used by the text filter, 
+service container and the Twig extension.
 
-All the view modes (default / full, teaser, search index, ...) that
+The obfuscation method can be defined via
+<em>Configuration > Content authoring > Obfuscate</em>
+(/admin/config/obfuscate).
+
+### Text format
+
+Activate the obfuscation for the desired text formats ('Full HTML', ...).
+<em>Configuration > Content authoring > Text formats and editors</em>,
+then check <em>Email address obfuscation filter</em>.
+
+### Per field
+
+The field configuration inherits from the system wide configuration
+as a default value and can be overridden per field instance.
+
+### View modes
+
+All the view modes (default/full, teaser, search index, ...) that
 exposes publicly email addresses should define the Field Formatter to 
-Obfuscate.
+<em>Obfuscate</em>.
 
 For some reasons, it should be preferred to leave the Field Formatter 
 of several view modes to Plain text or Email. So, the decision of 
