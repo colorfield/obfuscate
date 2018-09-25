@@ -145,9 +145,15 @@ class ObfuscateMail extends FilterBase {
 
     // Now we can convert all mailto URLs.
     $text = preg_replace_callback($this->getPatternMailto(), [$this, 'callbackMailto'], $text);
+
     // All bare email addresses with optional formatting information.
-    $text = preg_replace_callback($this->getPatternEmailWithOptions(), [$this, 'callbackEmailAddressesWithOptions'], $text);
+    // @todo implement
+    // $text = preg_replace_callback($this->getPatternEmailWithOptions(),
+    // [$this, 'callbackEmailAddressesWithOptions'], $text);
     // And finally, all bare email addresses.
+    // @fixme a match could already have been applied with the result
+    // of rot13 for mailto: callback, so in this case we are escaping a
+    // rot13 email, which is not the case of html_entity method.
     $text = preg_replace_callback($this->getPatternEmailBare(), [$this, 'callbackBareEmailAddresses'], $text);
 
     // Revert back to the original image contents.

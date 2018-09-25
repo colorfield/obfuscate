@@ -40,33 +40,18 @@ class ObfuscateMailROT13 implements ObfuscateMailInterface {
     // Safeguard string.
     $safeguard = '$%$!!$%$';
 
-    // Safeguard several stuff before parsing.
-    $prevent = [
-    // <input>.
-      '|<input [^>]*@[^>]*>|is',
-    // <textarea>.
-      '|(<textarea(?:[^>]*)>)(.*?)(</textarea>)|is',
-    // <head>.
-      '|(<head(?:[^>]*)>)(.*?)(</head>)|is',
-    // <script>.
-      '|(<script(?:[^>]*)>)(.*?)(</script>)|is',
-    ];
-    foreach ($prevent as $pattern) {
-      $string = preg_replace_callback($pattern, function ($matches) use ($safeguard) {
-        return str_replace('@', $safeguard, $matches[0]);
-      }, $string);
-    }
-
     // Define patterns for extracting emails.
+    // The vendor selection pattern has been simplified because
+    // most of the work has already been done and at this stage the string
+    // that is being passed is already an email address.
     $patterns = [
-    // Mailto anchors.
-      '|\<a[^>]+href\=\"mailto\:([^">?]+)(\?[^?">]+)?\"[^>]*\>(.*?)\<\/a\>|ism',
-    // Plain emails.
+      // Plain emails.
       '|[_a-z0-9-]+(?:\.[_a-z0-9-]+)*@[a-z0-9-]+(?:\.[a-z0-9-]+)*(?:\.[a-z]{2,3})|i',
     ];
 
     foreach ($patterns as $pattern) {
       $string = preg_replace_callback($pattern, function ($parts) use ($safeguard) {
+
         // Clean up element parts.
         $parts = array_map('trim', $parts);
 

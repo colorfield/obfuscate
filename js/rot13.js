@@ -11,7 +11,6 @@
   }
 
   function init(element) {
-    console.log(element);
     // Remove the css fallback
     $(element).find('.js-disabled').remove();
     // Transform back the rot 13
