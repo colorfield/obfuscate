@@ -57,6 +57,7 @@ class ObfuscateConfigForm extends ConfigFormBase {
     $this->config('obfuscate.settings')
       ->set('obfuscate.method', $form_state->getValue('method'))
       ->save();
+    drupal_flush_all_caches();
   }
 
 }

@@ -78,12 +78,11 @@ class ObfuscateFieldFormatter extends FormatterBase {
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
     $elements = [];
-    // @todo get current setting
-    $obfuscateMail = ObfuscateMailFactory::get(ObfuscateMailFactory::HTML_ENTITY);
+    $settings = $this->getSettings();
+    $obfuscateMail = ObfuscateMailFactory::get($settings['obfuscate_method']);
     foreach ($items as $delta => $item) {
-      $elements[$delta] = ['#markup' => $obfuscateMail->getObfuscatedLink($item->value)];
+      $elements[$delta] = $obfuscateMail->getObfuscatedLink($item->value);
     }
-
     return $elements;
   }
 

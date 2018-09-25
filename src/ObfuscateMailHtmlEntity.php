@@ -54,8 +54,10 @@ class ObfuscateMailHtmlEntity implements ObfuscateMailInterface {
       $link .= ' ' . $param . '="' . htmlspecialchars($value) . '"';
     }
     $link .= '>' . $obfuscatedEmail . '</a>';
-
-    return $link;
+    $build = [
+      '#markup' => $link,
+    ];
+    return $build;
   }
 
   /**

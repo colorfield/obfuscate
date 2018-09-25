@@ -17,8 +17,8 @@ interface ObfuscateMailInterface {
    * @param array $params
    *   Optional parameters to be used by the a tag.
    *
-   * @return string
-   *   Obfuscated email link.
+   * @return array
+   *   Obfuscated email link render array.
    */
   public function getObfuscatedLink($email, array $params = []);
 
@@ -29,7 +29,7 @@ interface ObfuscateMailInterface {
    *   Email address.
    *
    * @return string
-   *   Obfuscated email string.
+   *   Obfuscated email.
    */
   public function obfuscateEmail($email);
 

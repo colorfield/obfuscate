@@ -13,7 +13,7 @@ use Drupal\filter\Plugin\FilterBase;
  *
  * @Filter(
  *   id = "obfuscate_mail",
- *   title = @Translation("Email address obfuscation filter."),
+ *   title = @Translation("Email address obfuscation filter"),
  *   description = @Translation("Attempt to hide email addresses from spam-bots."),
  *   type = Drupal\filter\Plugin\FilterInterface::TYPE_TRANSFORM_IRREVERSIBLE
  * )
@@ -270,10 +270,14 @@ class ObfuscateMail extends FilterBase {
   private function output($name, $domain, $contents = '', array $headers = [], array $vars = []) {
     /** @var \Drupal\obfuscate\ObfuscateMail $obfuscateMail */
     $obfuscateMail = \Drupal::service('obfuscate_mail');
+    $renderer = \Drupal::service('renderer');
     $output = $obfuscateMail->getObfuscatedLink($name . '@' . $domain);
     // @todo implement spamspan coverage of contents and headers.
-    $output = '<span class="obfuscate">' . $output . '</span>';
-    return $output;
+    $output = '<span class="obfuscate">' . $renderer->renderRoot($output) . '</span>';
+    $build = [
+      '#markup' => $output,
+    ];
+    return $renderer->renderRoot($build);
   }
 
 }

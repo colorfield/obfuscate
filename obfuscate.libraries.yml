@@ -1,4 +1,4 @@
 default:
   version: VERSION
   js:
-    js/EmailObfuscator.js: { minified: true }
+    js/EmailObfuscator.min.js: { minified: true }

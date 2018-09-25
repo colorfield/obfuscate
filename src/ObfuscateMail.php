@@ -11,6 +11,11 @@ namespace Drupal\obfuscate;
  */
 class ObfuscateMail implements ObfuscateMailInterface {
 
+  /**
+   * Drupal\obfuscate\ObfuscateMailInterface definition.
+   *
+   * @var \Drupal\obfuscate\ObfuscateMailInterface
+   */
   private $obfuscateMailMethod;
 
   /**

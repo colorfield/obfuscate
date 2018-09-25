@@ -34,10 +34,9 @@ class TwigExtension extends \Twig_Extension {
    *   The entered obfuscated email as a link.
    */
   public function obfuscateMail($mail) {
+    /** @var \Drupal\obfuscate\ObfuscateMailInterface $obfuscateMail */
     $obfuscateMail = \Drupal::service('obfuscate_mail');
-    $build = [
-      '#markup' => $obfuscateMail->getObfuscatedLink($mail),
-    ];
+    $build = $obfuscateMail->getObfuscatedLink($mail);
     return $build;
   }
 
