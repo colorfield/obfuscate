@@ -22,7 +22,7 @@
 
   Drupal.behaviors.obfuscateRot13 = {
     attach: function (context) {
-      $(context).find('.obfuscate-r13').once('obfuscateRot13').each(function () {
+      $(context).find('.boshfpngr-e13').once('obfuscateRot13').each(function () {
         init(this);
       });
     }

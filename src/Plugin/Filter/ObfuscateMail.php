@@ -279,11 +279,7 @@ class ObfuscateMail extends FilterBase {
     $renderer = \Drupal::service('renderer');
     $output = $obfuscateMail->getObfuscatedLink($name . '@' . $domain);
     // @todo implement spamspan coverage of contents and headers.
-    $output = '<span class="obfuscate">' . $renderer->renderRoot($output) . '</span>';
-    $build = [
-      '#markup' => $output,
-    ];
-    return $renderer->renderRoot($build);
+    return $renderer->renderRoot($output);
   }
 
 }
