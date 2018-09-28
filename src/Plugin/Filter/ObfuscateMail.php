@@ -4,11 +4,12 @@ namespace Drupal\obfuscate\Plugin\Filter;
 
 use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
+use Drupal\Component\Utility\Html;
 
 /**
  * Provides a filter to obfuscate email addresses.
  *
- * This is mostly a port of the FilterSpamspan class.
+ * The regex patterns are taken from the FilterSpamspan class.
  * See https://www.drupal.org/project/spamspan.
  *
  * @Filter(
@@ -24,6 +25,18 @@ class ObfuscateMail extends FilterBase {
   // break the preg_match and preg_replace.
   const PATTERN_IMG_INLINE = '/data\:(?:.+?)base64(?:.+?)["|\']/';
   const PATTERN_IMG_PLACEHOLDER = '__obfuscate_img_placeholder__';
+
+  /**
+   * Safeguard pattern to operate replacements.
+   */
+  const SAFEGUARD = '!%%$$';
+
+  /**
+   * Stores the original element to restore.
+   *
+   * @var array
+   */
+  private $elementsQueue = [];
 
   /**
    * Returns main pattern.
@@ -151,10 +164,23 @@ class ObfuscateMail extends FilterBase {
     // $text = preg_replace_callback($this->getPatternEmailWithOptions(),
     // [$this, 'callbackEmailAddressesWithOptions'], $text);
     // And finally, all bare email addresses.
-    // @fixme a match could already have been applied with the result
-    // of rot13 for mailto: callback, so in this case we are escaping a
-    // rot13 email, which is not the case of html_entity method.
+    // @todo use polymorphism to handle this exception/remove coupling
+    // that should be only in the scope of ROT 13
+    // A match could already have been applied with the result
+    // of rot13 for the mailto callback, so in this case we are double
+    // obfuscating a rot13 email (which cannot happen in
+    // the case of html_entity method).
+    // This could probably be simplified by a
+    // negative lookahead / lookbehind regex.
+    $dom = $this->rot13Safeguard($text);
+    $text = Html::serialize($dom);
+
+    // Apply then the bare email obfuscation.
     $text = preg_replace_callback($this->getPatternEmailBare(), [$this, 'callbackBareEmailAddresses'], $text);
+
+    // Set then back the safeguarded obfuscated emails.
+    $newDom = $this->restoreRot13Safeguard($text);
+    $text = Html::serialize($newDom);
 
     // Revert back to the original image contents.
     foreach ($images[0] as $image) {
@@ -162,6 +188,76 @@ class ObfuscateMail extends FilterBase {
     }
 
     return new FilterProcessResult($text);
+  }
+
+  /**
+   * Safeguards ROT 13 obfuscated emails.
+   *
+   * Applies a safeguard based on an index to preserve already
+   * obfuscated emails from further alteration.
+   *
+   * @param string $text
+   *   The text that may contain ROT 13 obfuscated emails.
+   *
+   * @return \DOMDocument
+   *   The ROT 13 safeguarded DOM.
+   */
+  private function rot13Safeguard($text) {
+    $dom = Html::load($text);
+    $xPath = new \DOMXPath($dom);
+    $index = 0;
+
+    /** @var \DOMElement $domElement */
+    foreach ($xPath->query('//span[contains(@class,"boshfpngr-e13")]') as $domElement) {
+      $this->elementsQueue[] = $domElement;
+      $safeguardElement = $dom->createElement('span', 'tmp');
+      $safeguardElement->setAttribute('id', $this->getUniqueSafeguard($index));
+      $domElement->parentNode->replaceChild($safeguardElement, $domElement);
+      $index++;
+    }
+
+    $dom->saveHTML($dom->documentElement);
+    return $dom;
+  }
+
+  /**
+   * Restores the ROT 13 safeguarded values.
+   *
+   * @param string $text
+   *   The ROT 13 safeguarded text.
+   *
+   * @return \DOMDocument
+   *   The restored DOM that may contain ROT 13 obfuscated emails.
+   */
+  private function restoreRot13Safeguard($text) {
+    $dom = HTML::load($text);
+    $xPath = new \DOMXPath($dom);
+    /** @var \DOMElement $domElement */
+    foreach ($this->elementsQueue as $index => $domElement) {
+      $safeguardElements = $xPath->query("//span[@id='" . $this->getUniqueSafeguard($index) . "']");
+      /** @var \DOMElement $safeguardElement */
+      $safeguardElement = $safeguardElements[0];
+      if ($safeguardElement instanceof \DOMElement && $domElement instanceof \DOMElement) {
+        $node = $dom->importNode($domElement, TRUE);
+        $dom->documentElement->appendChild($node);
+        $safeguardElement->parentNode->replaceChild($node, $safeguardElement);
+      }
+    }
+    $dom->saveHTML($dom->documentElement);
+    return $dom;
+  }
+
+  /**
+   * Returns an unique safeguard to identify the element to replace back.
+   *
+   * @param int $index
+   *   Index of the element to replace.
+   *
+   * @return string
+   *   Safeguard with index.
+   */
+  private function getUniqueSafeguard($index) {
+    return self::SAFEGUARD . $index . strrev(self::SAFEGUARD);
   }
 
   /**
@@ -220,7 +316,6 @@ class ObfuscateMail extends FilterBase {
     if (count($attributes)) {
       $vars['extra_attributes'] = implode(' ', $attributes);
     }
-
     return $this->output($matches[4], $matches[5], $matches[7], $headers, $vars);
   }
 

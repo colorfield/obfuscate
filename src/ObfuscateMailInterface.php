@@ -10,6 +10,14 @@ namespace Drupal\obfuscate;
 interface ObfuscateMailInterface {
 
   /**
+   * ROT 13 class name of 'obfuscate'.
+   *
+   * This is not a dependency of ROT 13, it is merely a way
+   * to remove hints for spammers.
+   */
+  const OBFUSCATE_CSS_CLASS = 'boshfpngr';
+
+  /**
    * Returns an obfuscated link from an email address.
    *
    * @param string $email

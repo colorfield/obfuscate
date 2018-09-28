@@ -15,6 +15,14 @@ namespace Drupal\obfuscate;
 class ObfuscateMailROT13 implements ObfuscateMailInterface {
 
   /**
+   * ROT 13 class name of 'obfuscate-r13'.
+   *
+   * This is not a dependency of ROT 13, it is merely a way
+   * to remove hints for spammers.
+   */
+  const OBFUSCATE_ROT_13_CSS_CLASS = 'boshfpngr-e13';
+
+  /**
    * {@inheritdoc}
    */
   public function getObfuscatedLink($email, array $params = []) {
