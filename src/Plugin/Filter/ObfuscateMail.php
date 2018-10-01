@@ -187,7 +187,15 @@ class ObfuscateMail extends FilterBase {
       $text = preg_replace('/' . self::PATTERN_IMG_PLACEHOLDER . '/', $image, $text, 1);
     }
 
-    return new FilterProcessResult($text);
+    $result = new FilterProcessResult($text);
+
+    // Libraries are not attached via the template in this case.
+    $result->setAttachments([
+      'library' => [
+        'obfuscate/rot13',
+      ],
+    ]);
+    return $result;
   }
 
   /**
